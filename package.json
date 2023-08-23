@@ -1,8 +1,8 @@
 {
-  "name": "medusa-starter-default",
+  "name": "blindii",
   "version": "0.0.1",
-  "description": "A starter for Medusa projects.",
-  "author": "Sebastian Rindom <skrindom@gmail.com>",
+  "description": "An e-commerce solution for curtains and blinds",
+  "author": "Guy Thomas<guythomas721@gmail.com>",
   "license": "MIT",
   "keywords": [
     "sqlite",
