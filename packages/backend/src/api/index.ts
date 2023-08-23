@@ -5,6 +5,7 @@ import { authenticate, ConfigModule } from "@medusajs/medusa";
 import { getConfigFile } from "medusa-core-utils";
 import { attachStoreRoutes } from "./routes/store";
 import { attachAdminRoutes } from "./routes/admin";
+import "./validators"; // Override the default validators
 
 export default (rootDirectory: string): Router | Router[] => {
   // Read currently-loaded medusa config
