@@ -15,9 +15,12 @@ import { PriceSelectionResult } from "@medusajs/medusa/dist/interfaces/price-sel
 import MoneyAmountRepository from "@medusajs/medusa/dist/repositories/money-amount";
 import { isDefined } from "medusa-core-utils";
 
+// TODO:@guyathomas remove this when the MoneyAmount metadata PR is merged
+// https://github.com/medusajs/medusa/pull/4833
 type PriceSelectionResultWithMeta = PriceSelectionResult & {
   metadata?: Record<string, unknown>;
 };
+type MoneyAmountWithMeta = MoneyAmount & { metadata?: Record<string, unknown> };
 
 class PricingService extends MedusaPricingService {
   protected moneyAmountRepository_: typeof MoneyAmountRepository;
@@ -140,7 +143,7 @@ class PricingService extends MedusaPricingService {
       context.customer_id,
       context.include_discount_prices
     );
-    const prices = variantPrices[data.variantId];
+    const prices: MoneyAmountWithMeta[] = variantPrices[data.variantId];
     const result = prices.reduce(
       (finalPrice, currentPrice) => {
         if (currentPrice.price_list_id === null) {
