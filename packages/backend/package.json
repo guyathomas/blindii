@@ -1,5 +1,5 @@
 {
-  "name": "blindii",
+  "name": "@blindii/backend",
   "version": "0.0.1",
   "description": "An e-commerce solution for curtains and blinds",
   "author": "Guy Thomas<guythomas721@gmail.com>",
@@ -20,9 +20,10 @@
     "watch": "cross-env tsc --watch",
     "test": "cross-env jest",
     "seed": "cross-env medusa seed -f ./data/seed.json",
-    "start": "cross-env npm run build && medusa start",
+    "start": "cross-env npm run build && medusa migrations run && medusa start",
     "start:custom": "cross-env npm run build && node --preserve-symlinks --trace-warnings index.js",
-    "dev": "cross-env npm run build:server && medusa develop",
+    "dev": "cross-env concurrently \"yarn dev:server\" \"yarn dev:admin\"",
+    "dev:server": "cross-env npm run build:server && medusa develop",
     "dev:admin": "cross-env medusa-admin develop"
   },
   "dependencies": {
@@ -54,7 +55,7 @@
     "@types/express": "^4.17.13",
     "@types/jest": "^27.4.0",
     "@types/node": "^17.0.8",
-    "babel-preset-medusa-package": "^1.1.13",
+    "concurrently": "^8.2.1",
     "cross-env": "^7.0.3",
     "eslint": "^6.8.0",
     "jest": "^27.3.1",
