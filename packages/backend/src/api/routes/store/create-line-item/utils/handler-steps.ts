@@ -8,7 +8,7 @@ import {
   WithRequiredProperty,
 } from "@medusajs/medusa";
 
-import { FlagRouter } from "@medusajs/medusa/dist/utils/flag-router";
+import { FlagRouter } from "@medusajs/utils";
 import { EntityManager } from "typeorm";
 import { IdempotencyCallbackResult } from "@medusajs/medusa/dist/types/idempotency-key";
 import PricingService from "src/services/pricing";
