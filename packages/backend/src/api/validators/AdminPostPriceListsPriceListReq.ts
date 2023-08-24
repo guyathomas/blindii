@@ -19,7 +19,6 @@ class AdminPriceListPricesCreateReq extends MedusaAdminPriceListPricesCreateReq 
   @IsString()
   price_list_id?: string;
 }
-console.log("zzz will try override");
 
 class AdminPostPriceListsPriceListReq extends MedusaAdminPostPriceListsPriceListReq {
   @IsArray()
