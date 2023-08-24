@@ -15,6 +15,7 @@ import { useCartDropdown } from "./cart-dropdown-context"
 interface VariantInfoProps {
   variantId: string
   quantity: number
+  metadata?: Record<string, unknown>
 }
 
 interface LineInfoProps {
@@ -228,17 +229,12 @@ export const StoreProvider = ({ children }: StoreProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const addItem = ({
-    variantId,
-    quantity,
-  }: {
-    variantId: string
-    quantity: number
-  }) => {
+  const addItem = ({ variantId, quantity, metadata }: VariantInfoProps) => {
     addLineItem.mutate(
       {
         variant_id: variantId,
-        quantity: quantity,
+        quantity,
+        metadata,
       },
       {
         onSuccess: ({ cart }) => {
