@@ -1597,6 +1597,7 @@ __metadata:
     "@medusajs/event-bus-local": ^1.9.4
     "@medusajs/event-bus-redis": ^1.8.7
     "@medusajs/file-local": ^1.0.1
+    "@medusajs/icons": alpha
     "@medusajs/medusa": ^1.14.0
     "@medusajs/medusa-cli": ^1.3.16
     "@tanstack/react-query": 4.22.0
@@ -2933,6 +2934,15 @@ __metadata:
   peerDependencies:
     react: ^16.x || ^17.x || ^18.x
   checksum: 2b41ac522c6939d2239ac8c327853e1f86b6e93dcb87c47c594fe99cb6fca80069021384e0221d6c780139e73c9f6675a86760619c79048cb8d6a59fdb9ff991
+  languageName: node
+  linkType: hard
+
+"@medusajs/icons@npm:alpha":
+  version: 0.0.0-alpha-20230713141422
+  resolution: "@medusajs/icons@npm:0.0.0-alpha-20230713141422"
+  peerDependencies:
+    react: ^16.x || ^17.x || ^18.x
+  checksum: bacb13bc1516199407afb3cda145ba63a8b2344c81134bc6986ea1b7056dc859e073d377375d40a2ca25f5168ecc28c8b005c92f0e2369ab2f5d8d1552df0261
   languageName: node
   linkType: hard
 
