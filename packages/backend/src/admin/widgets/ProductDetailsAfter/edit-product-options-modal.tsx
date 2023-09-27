@@ -1,14 +1,18 @@
-import { ProductOption } from "@medusajs/medusa";
+import React from "react";
+import { ProductOption, ProductVariant } from "@medusajs/medusa";
 import { useFieldArray, useForm, Controller } from "react-hook-form";
 import differenceBy from "lodash/differenceBy";
 import MedusaModal from "./medusa-modal";
 import CreatableSelect from "react-select/creatable";
 
+import { useAdminCustomPost, useAdminGetSession } from "medusa-react";
+import { AdminPostProductsProductOptionsOptionValuesReq } from "src/api/routes/admin/create-product-option-value";
+
 type Props = {
   productOptions: ProductOption[];
   open: boolean;
   onClose: () => void;
-  variantId: string;
+  productId: string;
 };
 type OptionInput = { value: string; label: string; id?: string };
 type OptionField = { id: string; title: string; values: OptionInput[] };
@@ -18,12 +22,18 @@ type OptionValuesForm = {
 type CreateOptionInput = { optionId: string; value: string };
 
 const OptionValuesModal = ({
-  variantId,
+  productId,
   open,
   onClose,
   productOptions,
 }: Props) => {
-  const defaultValues = {
+  const { mutate: createOptions } = useAdminCustomPost<
+    AdminPostProductsProductOptionsOptionValuesReq,
+    ProductVariant
+  >(`/admin/option-value/${productId}`, ["create-option-value"]);
+  const { user } = useAdminGetSession();
+
+  const defaultValues = React.useRef({
     productOptions: productOptions.map((option) => ({
       id: option.id,
       title: option.title,
@@ -33,14 +43,13 @@ const OptionValuesModal = ({
         id,
       })),
     })),
-  };
+  });
   const {
     control,
-    register,
     formState: { isDirty },
     handleSubmit,
   } = useForm<OptionValuesForm>({
-    defaultValues,
+    defaultValues: defaultValues.current,
   });
 
   const { fields } = useFieldArray({
@@ -55,14 +64,14 @@ const OptionValuesModal = ({
     }>(
       (acc, option) => {
         const valuesToCreate = option.values
-          .filter((v) => !v.id)
+          .filter((v) => !v.id) // Those that don't have an ID, must have been created
           .map((v) => ({
             optionId: option.id,
             value: v.value,
           }));
         const initialValuesForOption: OptionInput[] =
-          defaultValues.productOptions.find((o) => o.id === option.id).values ||
-          [];
+          defaultValues.current.productOptions.find((o) => o.id === option.id)
+            .values || [];
         const valuesToDelete = differenceBy(
           initialValuesForOption,
           option.values,
@@ -80,14 +89,36 @@ const OptionValuesModal = ({
         delete: [],
       }
     );
-    console.log("zzz allChanges", allChanges);
+    if (allChanges.create.length) {
+      await createOptions({
+        values: allChanges.create.map((v) => ({
+          option_id: v.optionId,
+          value: v.value,
+        })),
+      });
+    }
+
+    await Promise.all(
+      allChanges.delete.map((v) =>
+        fetch(
+          `${process.env.MEDUSA_BACKEND_URL}/admin/option-value/${v.value}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${user.api_token}`,
+            },
+          }
+        )
+      )
+    );
+    onClose();
   });
 
   return (
     <MedusaModal open={open} handleClose={onClose}>
       <MedusaModal.Body>
         <MedusaModal.Header handleClose={onClose}>
-          <h1 className="inter-xlarge-semibold">Variant Options</h1>
+          <h1 className="inter-xlarge-semibold">Product Options</h1>
         </MedusaModal.Header>
         <form onSubmit={onSubmit}>
           <MedusaModal.Content>
@@ -144,3 +175,4 @@ const OptionValuesModal = ({
 };
 
 export default OptionValuesModal;
+export const config = {};

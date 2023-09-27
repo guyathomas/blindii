@@ -185,3 +185,5 @@ MedusaModal.Footer = ({ children, className }) => {
 };
 
 export default MedusaModal;
+
+export const config = {};
