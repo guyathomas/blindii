@@ -6,6 +6,7 @@ import ProductOptionValueService from "src/services/product-option-value";
 
 export default async (req, res) => {
   const { product_id } = req.params;
+
   const validated = await validator(
     AdminPostProductsProductOptionsOptionValuesReq,
     req.body

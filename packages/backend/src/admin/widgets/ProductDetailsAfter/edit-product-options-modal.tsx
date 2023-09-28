@@ -4,13 +4,15 @@ import { useFieldArray, useForm, Controller } from "react-hook-form";
 import differenceBy from "lodash/differenceBy";
 import MedusaModal from "./medusa-modal";
 import CreatableSelect from "react-select/creatable";
-
-import { useAdminCustomPost, useAdminGetSession } from "medusa-react";
+import { useAdminCustomPost } from "medusa-react";
 import { AdminPostProductsProductOptionsOptionValuesReq } from "src/api/routes/admin/create-product-option-value";
+import { AdminDeleteProductsProductOptionsOptionValuesReq } from "src/api/routes/admin/delete-product-option-value";
 
 type Props = {
   productOptions: ProductOption[];
   open: boolean;
+  onSuccess: (message: string) => void;
+  onError: (message: string) => void;
   onClose: () => void;
   productId: string;
 };
@@ -24,14 +26,24 @@ type CreateOptionInput = { optionId: string; value: string };
 const OptionValuesModal = ({
   productId,
   open,
+  onSuccess,
   onClose,
+  onError,
   productOptions,
 }: Props) => {
-  const { mutate: createOptions } = useAdminCustomPost<
+  const { mutateAsync: createOptions } = useAdminCustomPost<
     AdminPostProductsProductOptionsOptionValuesReq,
     ProductVariant
-  >(`/admin/option-value/${productId}`, ["create-option-value"]);
-  const { user } = useAdminGetSession();
+  >(`/admin/option-value/bulk-create/${productId}`, ["create-option-value"], {
+    product: true,
+  });
+
+  const { mutateAsync: deleteOptions } = useAdminCustomPost<
+    AdminDeleteProductsProductOptionsOptionValuesReq,
+    ProductVariant
+  >(`/admin/option-value/bulk-delete/${productId}`, ["delete-option-value"], {
+    product: true,
+  });
 
   const defaultValues = React.useRef({
     productOptions: productOptions.map((option) => ({
@@ -89,27 +101,39 @@ const OptionValuesModal = ({
         delete: [],
       }
     );
-    if (allChanges.create.length) {
-      await createOptions({
+    await deleteOptions(
+      {
+        values: allChanges.delete.map((option) => ({ id: option.value })),
+      },
+      {
+        onError: () => {
+          onError("Failed to delete options");
+        },
+        onSuccess: () => {
+          if (allChanges.delete.length) {
+            onSuccess("Options deleted successfully");
+          }
+        },
+      }
+    );
+
+    await createOptions(
+      {
         values: allChanges.create.map((v) => ({
           option_id: v.optionId,
           value: v.value,
         })),
-      });
-    }
-
-    await Promise.all(
-      allChanges.delete.map((v) =>
-        fetch(
-          `${process.env.MEDUSA_BACKEND_URL}/admin/option-value/${v.value}`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${user.api_token}`,
-            },
+      },
+      {
+        onError: () => {
+          onError("Failed to create options");
+        },
+        onSuccess: () => {
+          if (allChanges.create.length) {
+            onSuccess("Options created successfully");
           }
-        )
-      )
+        },
+      }
     );
     onClose();
   });

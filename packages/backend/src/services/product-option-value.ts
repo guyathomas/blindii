@@ -42,14 +42,14 @@ export default class ProductOptionValueService extends TransactionBaseService {
       const productOptionValueRepo = manager.withRepository(
         this.productOptionValueRepository_
       );
-      const optionEntries = productOptionValueRepo.create(data);
-      await productOptionValueRepo.insert(optionEntries);
+      const optionRecords = productOptionValueRepo.create(data);
+      await productOptionValueRepo.insert(optionRecords);
 
       this.eventBusService_.emit(ProductOptionValueService.Events.CREATED, {
-        optionValues: optionEntries,
+        optionRecords,
       });
 
-      return optionEntries;
+      return optionRecords;
     });
   }
 
@@ -58,13 +58,15 @@ export default class ProductOptionValueService extends TransactionBaseService {
    * @param ids - the array of strings of ID's for options to delete
    * @return the result of the model update operation
    */
-  async deleteOptionValues(ids: string[]): Promise<string[]> {
+  async deleteOptionValues(
+    entries: { id: string }[]
+  ): Promise<ProductOptionValue[]> {
     return await this.atomicPhase_(async (manager) => {
       const productOptionValueRepo = manager.withRepository(
         this.productOptionValueRepository_
       );
       const query = buildQuery(
-        { id: ids },
+        { id: entries.map((e) => e.id) },
         {} as FindConfig<ProductOptionValue>
       );
       const optionRecords = await productOptionValueRepo.find(query);
@@ -72,10 +74,10 @@ export default class ProductOptionValueService extends TransactionBaseService {
       await productOptionValueRepo.softRemove(optionRecords);
 
       this.eventBusService_.emit(ProductOptionValueService.Events.DELETED, {
-        ids,
+        optionRecords,
       });
 
-      return ids;
+      return optionRecords;
     });
   }
 }

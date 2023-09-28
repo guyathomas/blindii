@@ -25,6 +25,12 @@ const ProductDetailsAfter = ({
           onClose={() => {
             setIsEditing(false);
           }}
+          onSuccess={(message: string) => {
+            notify.success("Success", message);
+          }}
+          onError={(message: string) => {
+            notify.error("Error", message);
+          }}
           productOptions={detailedProduct.options}
           productId={detailedProduct.id}
         />

@@ -7,6 +7,12 @@ export function attachAdminRoutes(adminRouter: Router) {
   // Attach routes for onboarding experience, defined separately
   onboardingRoutes(adminRouter);
 
-  adminRouter.post("/option-value/:product_id", createProductOptionValue);
-  adminRouter.delete("/option-value/:id", deleteProductOptionValue);
+  adminRouter.post(
+    "/option-value/bulk-create/:product_id",
+    createProductOptionValue
+  );
+  adminRouter.post(
+    "/option-value/bulk-delete/:product_id",
+    deleteProductOptionValue
+  );
 }
