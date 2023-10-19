@@ -1,6 +1,7 @@
 import { useProductActions } from "@lib/context/product-context"
 import useProductPrice from "@lib/hooks/use-product-price"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
+import { useProducts } from "medusa-react"
 import Button from "@modules/common/components/button"
 import Input from "@modules/common/components/input"
 import OptionSelect from "@modules/products/components/option-select"
@@ -8,7 +9,7 @@ import clsx from "clsx"
 import Link from "next/link"
 import React, { useMemo } from "react"
 import { useForm } from "react-hook-form"
-import { Product } from "types/medusa"
+import { Product, ProductOption } from "@medusajs/medusa"
 
 type ProductActionsProps = {
   product: PricedProduct
@@ -18,6 +19,22 @@ interface WindowCoveringProductFormData {
   window_width: number
   window_height: number
   [key: string]: unknown
+}
+
+const useProductOptionValueDict = (options: ProductOption[]) => {
+  const productIds = options
+    .flatMap((option) => option.values)
+    .map(({ value }) => value)
+    .filter((value) => value.startsWith("prod_"))
+  const { products = [] } = useProducts({
+    id: productIds,
+  })
+  const productMap = React.useMemo(
+    () =>
+      products.reduce((acc, p) => acc.set(p.id, p), new Map<string, Product>()),
+    [products]
+  )
+  return productMap
 }
 
 const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
@@ -31,6 +48,8 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
   })
   const { updateOptions, addToCart, options, inStock, variant } =
     useProductActions()
+
+  const productsById = useProductOptionValueDict(product.options || [])
 
   const price = useProductPrice({ id: product.id!, variantId: variant?.id })
 
@@ -58,24 +77,6 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
         <h3 className="text-xl-regular">{product.title}</h3>
 
         <p className="text-base-regular">{product.description}</p>
-
-        {product.variants.length > 1 && (
-          <div className="my-8 flex flex-col gap-y-6">
-            {(product.options || []).map((option) => {
-              return (
-                <div key={option.id}>
-                  <OptionSelect
-                    option={option}
-                    current={options[option.id]}
-                    updateOption={updateOptions}
-                    title={option.title}
-                  />
-                </div>
-              )
-            })}
-          </div>
-        )}
-
         <Input
           label="Window Width"
           {...register("window_width", {
@@ -99,7 +100,24 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
           defaultValue={0}
           errors={errors}
         />
-
+        <div className="my-8 flex flex-col gap-y-6">
+          {(product.options || []).map((option) => {
+            return (
+              <div key={option.id}>
+                <OptionSelect
+                  optionValues={option.values.map((v) => ({
+                    ...v,
+                    title: productsById.get(v.value)?.title || v.value,
+                    id: option.id,
+                  }))}
+                  current={options[option.id]}
+                  updateOption={updateOptions}
+                  title={option.title}
+                />
+              </div>
+            )
+          })}
+        </div>
         <div className="mb-4">
           {selectedPrice ? (
             <div className="flex flex-col text-gray-700">
