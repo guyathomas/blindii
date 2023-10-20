@@ -1,18 +1,48 @@
+import { Product } from "@medusajs/medusa"
+import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
+import { sumBy } from "lodash"
 import { formatAmount, useCart, useProducts } from "medusa-react"
 import { useEffect, useMemo } from "react"
 import { CalculatedVariant } from "types/medusa"
 
 type useProductPriceProps = {
-  id: string
-  variantId?: string
+  products: { id: string; variantId?: string }[]
 }
 
-const useProductPrice = ({ id, variantId }: useProductPriceProps) => {
-  const { cart } = useCart()
+export const getPercentageDiff = (original: number, calculated: number) => {
+  const diff = original - calculated
+  const decrease = (diff / original) * 100
 
-  const { products, isLoading, isError, refetch } = useProducts(
+  return decrease.toFixed()
+}
+
+const getCheapestPriceFromProduct = (product: PricedProduct) => {
+  if (!product || !product.variants?.length) return null
+
+  const variants = product.variants as unknown as CalculatedVariant[]
+
+  const cheapestVariant = variants.reduce((prev, curr) => {
+    return prev.calculated_price < curr.calculated_price ? prev : curr
+  })
+  return {
+    calculated_price: cheapestVariant.calculated_price,
+    original_price: cheapestVariant.original_price,
+    price_type: cheapestVariant.calculated_price_type,
+  }
+}
+
+const useProductPrice = ({
+  products: sourceProduct = [],
+}: useProductPriceProps) => {
+  const { cart } = useCart()
+  const {
+    products = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useProducts(
     {
-      id: id,
+      id: sourceProduct.map((p) => p.id),
       cart_id: cart?.id,
     },
     { enabled: !!cart?.id && !!cart?.region_id }
@@ -24,80 +54,91 @@ const useProductPrice = ({ id, variantId }: useProductPriceProps) => {
     }
   }, [cart?.region_id, refetch])
 
-  const product = products?.[0]
+  const cheapestPrices = useMemo(() => {
+    return products
+      .map((product) => getCheapestPriceFromProduct(product))
+      .filter(Boolean)
+  }, [products, cart?.region])
 
-  const getPercentageDiff = (original: number, calculated: number) => {
-    const diff = original - calculated
-    const decrease = (diff / original) * 100
+  const variantPrices = useMemo(() => {
+    const productToVariantIdMap = sourceProduct.reduce(
+      (acc, p) => acc.set(p.id, p.variantId),
+      new Map()
+    )
+    return products
+      .map((product) => {
+        const variantIdForProduct = productToVariantIdMap.get(product.id)
+        if (!product || !variantIdForProduct || !cart?.region) {
+          return null
+        }
 
-    return decrease.toFixed()
-  }
+        const variant = product.variants.find(
+          (v) => v.id === variantIdForProduct || v.sku === variantIdForProduct
+        ) as unknown as CalculatedVariant
 
-  const cheapestPrice = useMemo(() => {
-    if (!product || !product.variants?.length || !cart?.region) {
-      return null
-    }
+        if (!variant) return null
 
-    const variants = product.variants as unknown as CalculatedVariant[]
+        return {
+          calculated_price: variant.calculated_price,
+          original_price: variant.original_price,
+          price_type: variant.calculated_price_type,
+        }
+      })
+      .filter(Boolean)
+  }, [products, cart?.region])
 
-    const cheapestVariant = variants.reduce((prev, curr) => {
-      return prev.calculated_price < curr.calculated_price ? prev : curr
-    })
+  const cheapestPriceOriginal = sumBy(cheapestPrices, "original_price")
+  const cheapestPriceCalculated = sumBy(cheapestPrices, "calculated_price")
+  const variantPriceOriginal = sumBy(variantPrices, "original_price")
+  const variantPriceCalculated = sumBy(variantPrices, "calculated_price")
 
+  if (!cart?.region)
     return {
-      calculated_price: formatAmount({
-        amount: cheapestVariant.calculated_price,
-        region: cart.region,
-        includeTaxes: false,
-      }),
-      original_price: formatAmount({
-        amount: cheapestVariant.original_price,
-        region: cart.region,
-        includeTaxes: false,
-      }),
-      price_type: cheapestVariant.calculated_price_type,
-      percentage_diff: getPercentageDiff(
-        cheapestVariant.original_price,
-        cheapestVariant.calculated_price
-      ),
-    }
-  }, [product, cart?.region])
-
-  const variantPrice = useMemo(() => {
-    if (!product || !variantId || !cart?.region) {
-      return null
+      products,
+      cheapestPrice: null,
+      variantPrice: null,
+      isLoading,
+      isError,
     }
 
-    const variant = product.variants.find(
-      (v) => v.id === variantId || v.sku === variantId
-    ) as unknown as CalculatedVariant
-
-    if (!variant) {
-      return null
-    }
-
-    return {
-      calculated_price: formatAmount({
-        amount: variant.calculated_price,
-        region: cart.region,
-        includeTaxes: false,
-      }),
-      original_price: formatAmount({
-        amount: variant.original_price,
-        region: cart.region,
-        includeTaxes: false,
-      }),
-      price_type: variant.calculated_price_type,
-      percentage_diff: getPercentageDiff(
-        variant.original_price,
-        variant.calculated_price
-      ),
-    }
-  }, [product, variantId, cart?.region])
-
+  const variantPrice = variantPriceOriginal
+    ? {
+        calculated_price: formatAmount({
+          amount: variantPriceCalculated,
+          region: cart.region,
+          includeTaxes: false,
+        }),
+        original_price: formatAmount({
+          amount: variantPriceOriginal,
+          region: cart.region,
+          includeTaxes: false,
+        }),
+        price_type: variantPrices[0]?.price_type,
+        percentage_diff: getPercentageDiff(
+          variantPriceOriginal,
+          variantPriceCalculated
+        ),
+      }
+    : null
   return {
-    product,
-    cheapestPrice,
+    products,
+    cheapestPrice: {
+      calculated_price: formatAmount({
+        amount: cheapestPriceCalculated,
+        region: cart.region,
+        includeTaxes: false,
+      }),
+      original_price: formatAmount({
+        amount: cheapestPriceOriginal,
+        region: cart.region,
+        includeTaxes: false,
+      }),
+      price_type: cheapestPrices[0]?.price_type,
+      percentage_diff: getPercentageDiff(
+        cheapestPriceOriginal,
+        cheapestPriceCalculated
+      ),
+    },
     variantPrice,
     isLoading,
     isError,

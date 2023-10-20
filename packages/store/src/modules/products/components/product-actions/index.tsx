@@ -1,5 +1,6 @@
 import { useProductActions } from "@lib/context/product-context"
 import useProductPrice from "@lib/hooks/use-product-price"
+import { formatAmount, useCart } from "medusa-react"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
 import { useProducts } from "medusa-react"
 import Button from "@modules/common/components/button"
@@ -9,7 +10,9 @@ import clsx from "clsx"
 import Link from "next/link"
 import React, { useMemo } from "react"
 import { useForm } from "react-hook-form"
-import { Product, ProductOption } from "@medusajs/medusa"
+import { ProductOption } from "@medusajs/medusa"
+import { findCheapestCurrencyPrice } from "@lib/util/prices"
+import { Variant } from "types/medusa"
 
 type ProductActionsProps = {
   product: PricedProduct
@@ -31,13 +34,17 @@ const useProductOptionValueDict = (options: ProductOption[]) => {
   })
   const productMap = React.useMemo(
     () =>
-      products.reduce((acc, p) => acc.set(p.id, p), new Map<string, Product>()),
+      products.reduce(
+        (acc, p) => (p?.id ? acc.set(p.id, p) : acc),
+        new Map<string, PricedProduct>()
+      ),
     [products]
   )
   return productMap
 }
 
 const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
+  const { cart } = useCart()
   const {
     register,
     handleSubmit,
@@ -50,8 +57,14 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
     useProductActions()
 
   const productsById = useProductOptionValueDict(product.options || [])
-
-  const price = useProductPrice({ id: product.id!, variantId: variant?.id })
+  const price = useProductPrice({
+    products: [
+      { id: product.id!, variantId: variant?.id },
+      ...Object.values(options)
+        .filter((value) => value.startsWith("prod_"))
+        .map((id) => ({ id })),
+    ],
+  })
 
   const selectedPrice = useMemo(() => {
     const { variantPrice, cheapestPrice } = price
@@ -105,11 +118,27 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
             return (
               <div key={option.id}>
                 <OptionSelect
-                  optionValues={option.values.map((v) => ({
-                    ...v,
-                    title: productsById.get(v.value)?.title || v.value,
-                    id: option.id,
-                  }))}
+                  optionValues={option.values.map((v) => {
+                    const optionValueProductAddon = productsById.get(v.value)
+                    const currencyPrice = findCheapestCurrencyPrice(
+                      (productsById.get(v.value)?.variants as Variant[]) || [],
+                      cart?.region.currency_code!
+                    )
+                    const subtitle = currencyPrice?.amount
+                      ? "+" +
+                        formatAmount({
+                          amount: currencyPrice.amount,
+                          region: cart?.region!,
+                          includeTaxes: false,
+                        })
+                      : ""
+                    return {
+                      ...v,
+                      title: optionValueProductAddon?.title || v.value,
+                      id: option.id,
+                      subtitle,
+                    }
+                  })}
                   current={options[option.id]}
                   updateOption={updateOptions}
                   title={option.title}

@@ -1,12 +1,17 @@
 import clsx from "clsx"
-import { uniqBy } from "lodash"
 import React from "react"
 
 type OptionSelectProps = {
-  optionValues: { title?: string; value: string; id: string }[]
+  optionValues: {
+    title?: string
+    value: string
+    id: string
+    subtitle?: string
+  }[]
   current: string
   updateOption: (option: Record<string, string>) => void
   title: string
+  subtitle?: string
 }
 
 const OptionSelect: React.FC<OptionSelectProps> = ({
@@ -19,7 +24,7 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
     <div className="flex flex-col gap-y-3">
       <span className="text-base-semi">Select {title}</span>
       <div className="grid grid-cols-3 lg:grid-cols-6 gap-2">
-        {optionValues.map(({ value, title, id }) => {
+        {optionValues.map(({ value, title, id, subtitle }) => {
           return (
             <button
               onClick={() => updateOption({ [id]: value })}
@@ -29,7 +34,8 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
                 { "border-gray-900": value === current }
               )}
             >
-              {title}
+              <div>{title}</div>
+              <div>{subtitle}</div>
             </button>
           )
         })}
