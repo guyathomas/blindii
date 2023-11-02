@@ -1,10 +1,11 @@
 {
   "name": "blindii",
-  "packageManager": "yarn@3.6.2",
+  "packageManager": "yarn@1.22.19",
   "private": true,
   "scripts": {
     "build": "turbo run --concurrency=4 build",
     "dev": "turbo run --concurrency=4 dev",
+    "start": "turbo run --concurrency=4 start",
     "clean": "turbo run clean",
     "coverage": "turbo run --concurrency=4 coverage",
     "coverage:ci": "turbo run --concurrency=2 coverage -- --maxWorkers=2 --forceExit",
@@ -23,8 +24,8 @@
   ],
   "volta": {
     "node": "18.17.1",
-    "npm": "9.8.1",
-    "yarn": "3.6.2"
+    "npm": "9.6.7",
+    "yarn": "1.22.19"
   },
   "dependencies": {
     "@changesets/cli": "^2.26.2",
