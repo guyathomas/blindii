@@ -107,8 +107,6 @@ const MedusaModal: ModalType = ({
 };
 
 MedusaModal.Body = ({ children, className, style }) => {
-  const { isLargeModal } = React.useContext(ModalContext);
-
   return (
     <div
       style={style}

@@ -69,7 +69,7 @@ const OptionValuesModal = ({
     control,
   });
 
-  const onSubmit = handleSubmit(async (values) => {
+  const onSubmit = handleSubmit(async (values: OptionValuesForm) => {
     const allChanges = values.productOptions.reduce<{
       create: CreateOptionInput[];
       delete: CreateOptionInput[];
