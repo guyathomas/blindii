@@ -20,10 +20,11 @@
     "watch": "cross-env tsc --watch",
     "test": "cross-env jest",
     "seed": "cross-env medusa seed -f ./data/seed.json",
-    "start": "cross-env yarn build && medusa migrations run && medusa start",
+    "start": "yarn start:server",
+    "start:server": "cross-env yarn build && medusa migrations run && medusa start",
     "start:custom": "cross-env yarn build && node --preserve-symlinks --trace-warnings index.js",
     "dev": "cross-env concurrently \"yarn dev:server\" \"yarn dev:admin\"",
-    "dev:server": "cross-env yarn build:server && medusa develop",
+    "dev:server": "cross-env medusa develop",
     "dev:admin": "cross-env medusa-admin develop"
   },
   "dependencies": {
