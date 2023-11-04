@@ -74,7 +74,12 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
 
   return (
     <form
-      onSubmit={handleSubmit(addToCart)}
+      onSubmit={handleSubmit((registeredFields) => {
+        addToCart({
+          ...registeredFields, // window width & height
+          options, // product options
+        })
+      })}
       onReset={() => reset()}
       className="w-full"
     >

@@ -77,6 +77,7 @@ export const ProductProvider = ({
 
   // memoized function to check if the current options are a valid variant
   const variant = useMemo(() => {
+    if (variants.length === 1) return variants[0]
     let variantId: string | undefined = undefined
 
     for (const key of Object.keys(variantRecord)) {
