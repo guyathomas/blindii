@@ -131,7 +131,7 @@ const MobileActions: React.FC<MobileActionsProps> = ({ product, show }) => {
                           return (
                             <div key={option.id}>
                               <OptionSelect
-                                optionValues={[]} {/* TODO:@guyathomas - hack this component is currently unused so i'll just pass this to pass CI for now:*/}
+                                optionValues={[]}
                                 current={options[option.id]}
                                 updateOption={updateOptions}
                                 title={option.title}
