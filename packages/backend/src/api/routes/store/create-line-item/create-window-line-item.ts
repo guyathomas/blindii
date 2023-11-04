@@ -12,16 +12,12 @@ import { FlagRouter } from "@medusajs/utils";
 import { EntityManager } from "typeorm";
 import { IdempotencyCallbackResult } from "@medusajs/medusa/dist/types/idempotency-key";
 import PricingService from "src/services/pricing";
-
-export const CreateLineItemSteps = {
-  STARTED: "started",
-  FINISHED: "finished",
-};
+import { BlindOrCurtainMetadata } from "./handle-line-item-transaction";
 
 export async function handleAddOrUpdateLineItem(
   cartId: string,
   data: {
-    metadata?: Record<string, unknown>;
+    metadata: BlindOrCurtainMetadata;
     customer_id?: string;
     variant_id: string;
     quantity: number;
@@ -60,7 +56,7 @@ export async function handleAddOrUpdateLineItem(
       unit_price: variantPricing.calculated_price,
     });
 
-  await txCartService.addLineItem(cart.id, line, {
+  await txCartService.addOrUpdateLineItems(cart.id, line, {
     validateSalesChannels: featureFlagRouter.isFeatureEnabled("sales_channels"),
   });
 

@@ -77,7 +77,10 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
       onSubmit={handleSubmit((registeredFields) => {
         addToCart({
           ...registeredFields, // window width & height
-          options, // product options
+          options: Object.entries(options).map(([option_id, option_value]) => ({
+            option_id,
+            option_value,
+          })),
         })
       })}
       onReset={() => reset()}
@@ -95,6 +98,14 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
         <h3 className="text-xl-regular">{product.title}</h3>
 
         <p className="text-base-regular">{product.description}</p>
+        <Input
+          label="Window Name ( i.e. Bedroom - Left )"
+          {...register("window_name", {
+            required: true,
+          })}
+          type="text"
+          errors={errors}
+        />
         <Input
           label="Window Width"
           {...register("window_width", {
@@ -127,7 +138,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
                     const optionValueProductAddon = productsById.get(v.value)
                     const currencyPrice = findCheapestCurrencyPrice(
                       (productsById.get(v.value)?.variants as Variant[]) || [],
-                      cart?.region.currency_code!
+                      cart?.region?.currency_code!
                     )
                     const subtitle = currencyPrice?.amount
                       ? "+" +
