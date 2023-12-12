@@ -48,12 +48,54 @@ export async function handleAddOrUpdateLineItem(
     }
   );
 
+  const addonPrices = await Promise.all(
+    data.metadata.options
+      ?.filter(({ option_id, option_value }) =>
+        option_value.startsWith("prod_")
+      )
+      .map(({ option_value }) =>
+        pricingService.getProductPricingById(option_value, {
+          quantity: 1,
+          cart_id: cart.id,
+          region_id: cart.region_id,
+        })
+      ) || []
+  );
+
+  const totalAddonPrice = addonPrices
+    .map((addonPrice) =>
+      Object.entries(addonPrice).map(([variantId, pricing]) => pricing)
+    )
+    .flat()
+    .reduce(
+      (acc, { calculated_price }) =>
+        acc + (typeof calculated_price === "number" ? calculated_price : 0),
+      0
+    );
+
+  console.log(
+    "zzz addons",
+    await Promise.all(
+      data.metadata.options
+        ?.filter(({ option_id, option_value }) =>
+          option_value.startsWith("prod_")
+        )
+        .map(({ option_value }) =>
+          pricingService.getProductPricingById(option_value, {
+            quantity: 1,
+            cart_id: cart.id,
+            region_id: cart.region_id,
+          })
+        ) || []
+    )
+  );
+
   const line = await lineItemService
     .withTransaction(manager)
     .generate(data.variant_id, cart.region_id, data.quantity, {
       customer_id: data.customer_id || cart.customer_id,
       metadata: data.metadata,
-      unit_price: variantPricing.calculated_price,
+      unit_price: variantPricing.calculated_price + totalAddonPrice,
     });
 
   await txCartService.addOrUpdateLineItems(cart.id, line, {
