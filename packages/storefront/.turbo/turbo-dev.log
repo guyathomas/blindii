@@ -1,0 +1,296 @@
+
+[0m[2m[35m$[0m [2m[1mnext dev --turbopack -p 8000[0m
+   [1m[38;2;173;127;168m▲ Next.js 15.0.3[39m[22m (Turbopack)
+   - Local:        http://localhost:8000
+   - Environments: .env.local
+
+ [32m[1m✓[22m[39m Starting...
+ [32m[1m✓[22m[39m Compiled in 107ms
+ [32m[1m✓[22m[39m Ready in 656ms
+[31m [31m[1m⨯[22m[39m src/middleware.ts (27:31) @ getRegionMap[39m
+ [31m[1m⨯[22m[39m Error: fetch failed
+    at context.fetch (./[90mfile:///Users/guythomas/src/blindii/packages/storefront/[39mnode_modules/[4mnext[24m/dist/server/web/sandbox/context.js:302:38)
+    at getRegionMap (./src/middleware.ts:27:31)
+    at middleware (./src/middleware.ts:115:27)
+    at fn (./node_modules/[4mnext[24m/dist/src/build/templates/middleware.ts:27:20)
+    at run (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:289:36)
+    at run (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:288:43)
+    at fn (./node_modules/[4mnext[24m/dist/src/server/lib/trace/tracer.ts:351:28)
+    at NoopContextManager.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at startActiveSpan (./node_modules/[4mnext[24m/dist/src/server/lib/trace/tracer.ts:304:32)
+    at NoopContextManager.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NextTracerImpl.trace (./node_modules/[4mnext[24m/dist/src/server/lib/trace/tracer.ts:303:24)
+    at trace (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:240:26)
+    at NoopContextManager.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NextTracerImpl.withPropagatedContext (./node_modules/[4mnext[24m/dist/src/server/lib/trace/tracer.ts:228:24)
+    at withPropagatedContext (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:75:17)
+    at propagator (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:218:20) {
+  digest: [90mundefined[39m
+}
+[31m[0m [90m 25 |[39m   ) {[0m
+[0m [90m 26 |[39m     [90m// Fetch regions from Medusa. We can't use the JS client here because middleware is running on Edge and the client needs a Node environment.[39m[0m
+[0m[31m[1m>[22m[39m[90m 27 |[39m     [36mconst[39m { regions } [33m=[39m [36mawait[39m fetch([32m`${BACKEND_URL}/store/regions`[39m[33m,[39m {[0m
+[0m [90m    |[39m                               [31m[1m^[22m[39m[0m
+[0m [90m 28 |[39m       headers[33m:[39m {[0m
+[0m [90m 29 |[39m         [32m"x-publishable-api-key"[39m[33m:[39m [33mPUBLISHABLE_API_KEY[39m[33m![39m[33m,[39m[0m
+[0m [90m 30 |[39m       }[33m,[39m[0m[39m
+ [32m[1m✓[22m[39m Compiled /_error in 448ms
+ GET / [33m404[39m in 3ms
+[31m [31m[1m⨯[22m[39m src/middleware.ts (27:31) @ getRegionMap[39m
+ [31m[1m⨯[22m[39m Error: fetch failed
+    at context.fetch (./[90mfile:///Users/guythomas/src/blindii/packages/storefront/[39mnode_modules/[4mnext[24m/dist/server/web/sandbox/context.js:302:38)
+    at getRegionMap (./src/middleware.ts:27:31)
+    at middleware (./src/middleware.ts:115:27)
+    at fn (./node_modules/[4mnext[24m/dist/src/build/templates/middleware.ts:27:20)
+    at run (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:289:36)
+    at run (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:288:43)
+    at fn (./node_modules/[4mnext[24m/dist/src/server/lib/trace/tracer.ts:351:28)
+    at NoopContextManager.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at startActiveSpan (./node_modules/[4mnext[24m/dist/src/server/lib/trace/tracer.ts:304:32)
+    at NoopContextManager.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NextTracerImpl.trace (./node_modules/[4mnext[24m/dist/src/server/lib/trace/tracer.ts:303:24)
+    at trace (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:240:26)
+    at NoopContextManager.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (./node_modules/[4mnext[24m/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NextTracerImpl.withPropagatedContext (./node_modules/[4mnext[24m/dist/src/server/lib/trace/tracer.ts:228:24)
+    at withPropagatedContext (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:75:17)
+    at propagator (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:218:20) {
+  digest: [90mundefined[39m
+}
+[31m[0m [90m 25 |[39m   ) {[0m
+[0m [90m 26 |[39m     [90m// Fetch regions from Medusa. We can't use the JS client here because middleware is running on Edge and the client needs a Node environment.[39m[0m
+[0m[31m[1m>[22m[39m[90m 27 |[39m     [36mconst[39m { regions } [33m=[39m [36mawait[39m fetch([32m`${BACKEND_URL}/store/regions`[39m[33m,[39m {[0m
+[0m [90m    |[39m                               [31m[1m^[22m[39m[0m
+[0m [90m 28 |[39m       headers[33m:[39m {[0m
+[0m [90m 29 |[39m         [32m"x-publishable-api-key"[39m[33m:[39m [33mPUBLISHABLE_API_KEY[39m[33m![39m[33m,[39m[0m
+[0m [90m 30 |[39m       }[33m,[39m[0m[39m
+ GET / [33m404[39m in 1ms
+ [37m[1m○[22m[39m Compiling /_not-found/page ...
+ [32m[1m✓[22m[39m Compiled /_not-found/page in 1382ms
+[31m [31m[1m⨯[22m[39m src/middleware.ts (40:15) @ <unknown>[39m
+ [31m[1m⨯[22m[39m Error: A valid publishable key is required to proceed with the request
+    at <unknown> (./src/middleware.ts:40:15)
+    at async getRegionMap (./src/middleware.ts:27:25)
+    at async middleware (./src/middleware.ts:115:21)
+    at async (./node_modules/[4mnext[24m/dist/src/build/templates/middleware.ts:27:14)
+    at async (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:288:20)
+    at async adapter (./node_modules/[4mnext[24m/dist/src/server/web/adapter.ts:218:14)
+    at async (./[90mfile:///Users/guythomas/src/blindii/packages/storefront/[39mnode_modules/[4mnext[24m/dist/server/web/sandbox/sandbox.js:122:26)
+    at async runWithTaggedErrors (./[90mfile:///Users/guythomas/src/blindii/packages/storefront/[39mnode_modules/[4mnext[24m/dist/server/web/sandbox/sandbox.js:119:9)
+    at async DevServer.runMiddleware (./[90mfile:///Users/guythomas/src/blindii/packages/storefront/[39mnode_modules/[4mnext[24m/dist/server/next-server.js:994:24) {
+  digest: [90mundefined[39m
+}
+[31m[0m [90m 38 |[39m[0m
+[0m [90m 39 |[39m       [36mif[39m ([33m![39mresponse[33m.[39mok) {[0m
+[0m[31m[1m>[22m[39m[90m 40 |[39m         [36mthrow[39m [36mnew[39m [33mError[39m(json[33m.[39mmessage)[0m
+[0m [90m    |[39m               [31m[1m^[22m[39m[0m
+[0m [90m 41 |[39m       }[0m
+[0m [90m 42 |[39m[0m
+[0m [90m 43 |[39m       [36mreturn[39m json[0m[39m
+ GET / [33m404[39m in 1ms
+ [37m[1m [22m[39m Reload env: .env.local
+ [32m[1m✓[22m[39m Compiled middleware in 39ms
+ [37m[1m○[22m[39m Compiling /[countryCode] ...
+ [32m[1m✓[22m[39m Compiled /[countryCode] in 571ms
+Initiating Medusa client with default headers:
+ {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Initiating Medusa client with default headers:
+ {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Performing request to:
+ URL: http://localhost:9000/store/regions
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Performing request to:
+ URL: http://localhost:9000/store/customers/me?fields=%2Aorders
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Received response with status 200
+
+Performing request to:
+ URL: http://localhost:9000/store/collections?fields=id%2C%20handle%2C%20title&limit=100&offset=0
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Received response with status 401
+
+Performing request to:
+ URL: http://localhost:9000/store/regions
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Performing request to:
+ URL: http://localhost:9000/store/collections?fields=%2Aproducts&limit=100&offset=0
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Received response with status 200
+
+Received response with status 200
+
+Received response with status 200
+
+Performing request to:
+ URL: http://localhost:9000/store/product-categories?fields=%2Acategory_children%2C%20%2Aproducts%2C%20%2Aparent_category%2C%20%2Aparent_category.parent_category&limit=100
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Received response with status 200
+
+ GET /dk [32m200[39m in 978ms
+ │ [37mGET http://localhost:9000/store/regions 200 in 16ms [33m(cache skip)[37m[39m
+ │ │ [90mCache skipped reason: ([37mcache-control: no-cache (hard refresh)[90m)[39m
+ │ [37mGET http://localhost:9000/store/customers/me?fields=%2Aorders 401 in 16ms [33m(cache skip)[37m[39m
+ │ │ [90mCache skipped reason: ([37mcache-control: no-cache (hard refresh)[90m)[39m
+ │ [37mGET http://localhost:9000/store/regions 200 in 2ms [32m(cache hit)[37m[39m
+ │ [37mGET http://localhost:9000/store/collections?fields=id%2C%20handle%2C%20title&limit=100&offset=0 200 in 34ms [33m(cache skip)[37m[39m
+ │ │ [90mCache skipped reason: ([37mcache-control: no-cache (hard refresh)[90m)[39m
+ │ [37mGET http://localhost:9000/store/collections?fields=%2Aproducts&limit=100&offset=0 200 in 32ms [33m(cache skip)[37m[39m
+ │ │ [90mCache skipped reason: ([37mcache-control: no-cache (hard refresh)[90m)[39m
+ │ [37mGET http://localhost:9000/store/product-categories?fields=%2Acategory_children%2C%20%2Aproducts%2C%20%2Aparent_category%2C%20%2Aparent_category.parent_category&limit=100 200 in 14ms [33m(cache skip)[37m[39m
+ │ │ [90mCache skipped reason: ([37mcache-control: no-cache (hard refresh)[90m)[39m
+Performing request to:
+ URL: http://localhost:9000/store/collections?fields=id%2C%20handle%2C%20title&limit=100&offset=0
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Received response with status 200
+
+ GET /dk [32m200[39m in 49ms
+ │ [37mGET http://localhost:9000/store/collections?fields=id%2C%20handle%2C%20title&limit=100&offset=0 200 in 0ms [32m(cache hit)[37m[39m
+Initiating Medusa client with default headers:
+ {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+ [32m[1m✓[22m[39m Compiled /[countryCode]/account in 225ms
+Initiating Medusa client with default headers:
+ {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Performing request to:
+ URL: http://localhost:9000/store/customers/me?fields=%2Aorders
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Performing request to:
+ URL: http://localhost:9000/store/customers/me?fields=%2Aorders
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Received response with status 401
+
+Received response with status 401
+
+Performing request to:
+ URL: http://localhost:9000/store/orders?limit=10&offset=0&order=-created_at&fields=%2Aitems%2C%2Bitems.metadata%2C%2Aitems.variant%2C%2Aitems.product
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Received response with status 401
+
+ GET /dk/account [32m200[39m in 483ms
+ │ [37mGET http://localhost:9000/store/customers/me?fields=%2Aorders 401 in 21ms [33m(cache skip)[37m[39m
+ │ │ [90mCache skipped reason: ([37mcache-control: no-cache (hard refresh)[90m)[39m
+ │ [37mGET http://localhost:9000/store/customers/me?fields=%2Aorders 401 in 21ms [33m(cache skip)[37m[39m
+ │ │ [90mCache skipped reason: ([37mcache-control: no-cache (hard refresh)[90m)[39m
+ │ [37mGET http://localhost:9000/store/orders?limit=10&offset=0&order=-created_at&fields=%2Aitems%2C%2Bitems.metadata%2C%2Aitems.variant%2C%2Aitems.product 401 in 6ms [33m(cache skip)[37m[39m
+ │ │ [90mCache skipped reason: ([37mcache-control: no-cache (hard refresh)[90m)[39m
+Performing request to:
+ URL: http://localhost:9000/auth/customer/emailpass
+ Headers: {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f",
+  "authorization": "<REDACTED>"
+}
+
+Received response with status 200
+
+Performing request to:
+ URL: http://localhost:9000/store/customers/me?fields=%2Aorders
+ Headers: {
+  "accept": "application/json",
+  "authorization": "<REDACTED>",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f"
+}
+
+Performing request to:
+ URL: http://localhost:9000/store/customers/me?fields=%2Aorders
+ Headers: {
+  "accept": "application/json",
+  "authorization": "<REDACTED>",
+  "content-type": "application/json",
+  "x-publishable-api-key": "pk_9e4ffc9105eafe09e8de91f6f61476ba1db65331043567d980668a9589591e0f"
+}
+
