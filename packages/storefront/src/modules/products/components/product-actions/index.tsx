@@ -1,9 +1,9 @@
 "use client"
 
-import { addToCart } from "@lib/data/cart"
+import { addToCart, addToCartWithQuote } from "@lib/data/cart"
 import { useIntersection } from "@lib/hooks/use-in-view"
 import { HttpTypes } from "@medusajs/types"
-import { Button } from "@medusajs/ui"
+import { Button, Input } from "@medusajs/ui"
 import Divider from "@modules/common/components/divider"
 import OptionSelect from "@modules/products/components/product-actions/option-select"
 import { isEqual } from "lodash"
@@ -32,6 +32,8 @@ export default function ProductActions({
   disabled,
 }: ProductActionsProps) {
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
+  const [width, setWidth] = useState(300)
+  const [height, setHeight] = useState(300)
   const [isAdding, setIsAdding] = useState(false)
   const countryCode = useParams().countryCode as string
 
@@ -104,10 +106,13 @@ export default function ProductActions({
 
     setIsAdding(true)
 
-    await addToCart({
+    // TODO: How to handle items other than windows in quote?
+    await addToCartWithQuote({
       variantId: selectedVariant.id,
       quantity: 1,
       countryCode,
+      height,
+      width,
     })
 
     setIsAdding(false)
@@ -116,6 +121,26 @@ export default function ProductActions({
   return (
     <>
       <div className="flex flex-col gap-y-2" ref={actionsRef}>
+        <div className="flex flex-col gap-y-6 mt-6">
+          <h3 className="text-base-semi">Dimensions</h3>
+          <div className="grid grid-cols-2 gap-x-4">
+            <Input
+              name="width"
+              type="number"
+              value={width}
+              onChange={(e) => setWidth(parseInt(e.target.value))}
+              min="300"
+            />
+            <Input
+              name="height"
+              type="number"
+              value={height}
+              onChange={(e) => setHeight(parseInt(e.target.value))}
+              min="300"
+            />
+          </div>
+        </div>
+
         <div>
           {(product.variants?.length ?? 0) > 1 && (
             <div className="flex flex-col gap-y-4">

@@ -3,6 +3,14 @@ import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
 module.exports = defineConfig({
+  modules: [
+    {
+      resolve: "./src/modules/quote",
+      options: {
+        accessToken: process.env.QUOTE_API_ACCESS_TOKEN, // TODO: Define this in env once API exists
+      },
+    },
+  ],
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
     http: {

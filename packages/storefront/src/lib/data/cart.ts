@@ -142,6 +142,54 @@ export async function addToCart({
     .catch(medusaError)
 }
 
+export async function addToCartWithQuote({
+  variantId,
+  quantity,
+  countryCode,
+  width,
+  height,
+}: {
+  variantId: string
+  quantity: number
+  countryCode: string
+  width: number
+  height: number
+}) {
+  if (!variantId) {
+    throw new Error("Missing variant ID when adding to cart")
+  }
+
+  const cart = await getOrSetCart(countryCode)
+
+  if (!cart) {
+    throw new Error("Error retrieving or creating cart")
+  }
+
+  const headers = {
+    ...(await getAuthHeaders()),
+  }
+
+  // Call the new line-items-quote endpoint
+  await sdk.client
+    .fetch(`/store/carts/${cart.id}/line-items-quote`, {
+      method: "POST",
+      body: {
+        variant_id: variantId,
+        quantity,
+        metadata: {
+          width,
+          height,
+        },
+      },
+      headers,
+    })
+    .then(async () => {
+      const cartCacheTag = await getCacheTag("carts")
+      revalidateTag(cartCacheTag)
+    })
+    .catch(medusaError)
+}
+
 export async function updateLineItem({
   lineId,
   quantity,

@@ -70,6 +70,14 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
           {item.product_title}
         </Text>
         <LineItemOptions variant={item.variant} data-testid="product-variant" />
+        {item.metadata?.width && item.metadata?.height ? (
+          <Text
+            data-testid="product dimensions"
+            className="inline-block txt-small text-ui-fg-subtle w-full overflow-hidden text-ellipsis"
+          >
+            {String(item.metadata.width)}mm x {String(item.metadata.height)}mm
+          </Text>
+        ) : null}
       </Table.Cell>
 
       {type === "full" && (
